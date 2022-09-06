@@ -16,8 +16,8 @@
             <div class="load-button-container" style="flex-grow: 1;">
                 <div class="loadbutton">
             
-                    <button onclick="loadData()" id="load">Load Data</button>
-                    <button onclick="reloadData()" id="reload">reload data</button>
+                    <button onclick="window.functionDefinedInModuleScope.loadData()" id="load">Load Data</button>
+                    <button onclick="window.functionDefinedInModuleScope.reloadData()" id="reload">reload data</button>
                 </div>
             </div>
             <div class="table-container" style="flex-grow: 1;">
@@ -47,6 +47,6 @@
     </main>
 
     <footer></footer>
-    <script type="text/javascript" src="./scripts/main.js"></script>
+    <script type="module" src="./scripts/main.js"></script>
 </body>
 </html>

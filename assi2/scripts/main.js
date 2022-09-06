@@ -1,45 +1,5 @@
-let data = [
-  {
-    firstName: "Sunny",
-    middleName: "NA",
-    lastName: "Tyagi",
-    email: "sunny.tyagi@sourcefuse.com",
-    phone: "6396786017",
-    role: "Web-Apps Trainee",
-    address: "Ghaziabad",
-    id: 1,
-  },
-  {
-    firstName: "Deepak",
-    middleName: "NA",
-    lastName: "Kumar",
-    email: "deepak.kumar@sourcefuse.com",
-    phone: "8559010326",
-    role: "Snr. Tech. Head",
-    address: "Mohali",
-    id: 2,
-  },
-  {
-    firstName: "Meghna",
-    middleName: "NA",
-    lastName: "kashyap",
-    email: "meghna.kashyap@sourcefuse.com",
-    phone: "7834086997",
-    role: "HR Recruiter",
-    address: "Mohali",
-    id: 3,
-  },
-  {
-    firstName: "Samarpan",
-    middleName: "NA",
-    lastName: "Bhattacharya",
-    email: "samarpan.bhattacharya@sourcefuse.com",
-    phone: "9999909854",
-    role: "Principal Architect",
-    address: "Mohali",
-    id: 4,
-  },
-];
+import employeeData from "../data.json" assert { type: "json" };
+let data = employeeData;
 
 function loadData() {
   const table = document.getElementById("datatable");
@@ -47,21 +7,21 @@ function loadData() {
   for (let employeeData of data) {
     let row = table.insertRow(rowCount);
     let cellNum = 0;
-    for (let j in employeeData) {
+    for (let property in employeeData) {
       let newCell = row.insertCell(cellNum);
       if (cellNum != 7) {
-        newCell.innerHTML = `<p class=\"info-row-${row.rowIndex}\">${employeeData[j]}</p>
-                                    <input type="text" class=\"edit-info-row-${row.rowIndex}\" name=\"${j}\" style="display:none" value=\"${employeeData[j]}\">`;
+        newCell.innerHTML = `<p class=\"info-row-${row.rowIndex}\">${employeeData[property]}</p>
+                                    <input type="text" class=\"edit-info-row-${row.rowIndex}\" name=\"${property}\" style="display:none" value=\"${employeeData[property]}\">`;
         cellNum += 1;
       } else {
         newCell.innerHTML = `
                               <div id=\"normal-action-${row.rowIndex}\">
-                                  <button id=\"del-row-${employeeData[j]}\" onclick=\"deleteRow(${row.rowIndex})\">del</button>
-                                  <button id=\"edit-row-${employeeData[j]}\" onclick=\"editRow(${row.rowIndex})\">edit</button>
+                                  <button id=\"del-row-${employeeData[property]}\" onclick=\"window.functionDefinedInModuleScope.deleteRow(${row.rowIndex})\">del</button>
+                                  <button id=\"edit-row-${employeeData[property]}\" onclick=\"window.functionDefinedInModuleScope.editRow(${row.rowIndex})\">edit</button>
                               </div>
                               <div id=\"edit-action-${row.rowIndex}\" style=\"display:none\">
-                                  <button id=\"save-row-${employeeData[j]}\" onclick=\"save(${row.rowIndex})\">save</button>
-                                  <button id=\"cancel-row-${employeeData[j]}\" onclick=\"cancel(${row.rowIndex})\">cancel</button>
+                                  <button id=\"save-row-${employeeData[property]}\" onclick=\"window.functionDefinedInModuleScope.save(${row.rowIndex})\">save</button>
+                                  <button id=\"cancel-row-${employeeData[property]}\" onclick=\"window.functionDefinedInModuleScope.cancel(${row.rowIndex})\">cancel</button>
                               </div>
                               `;
       }
@@ -72,6 +32,7 @@ function loadData() {
   document.getElementById("reload").style.display = "inline";
   document.getElementById("load").style.display = "none";
 }
+window.loadData = loadData;
 
 function save(n) {
   let editableRowInput = document.getElementsByClassName(`edit-info-row-${n}`);
@@ -81,36 +42,67 @@ function save(n) {
   reloadData();
 }
 
-function cancel(n) {
-  let editableRowInput = document.getElementsByClassName(`edit-info-row-${n}`);
-  let staticCellData = document.getElementsByClassName(`info-row-${n}`);
-
-  Array.from(editableRowInput).forEach((input) => {
-    input.style.display = "none";
-  });
-  Array.from(staticCellData).forEach((input) => {
-    input.style.display = "inline";
-  });
-  document.getElementById(`normal-action-${n}`).style.display = "inline";
-  document.getElementById(`edit-action-${n}`).style.display = "none";
+function cancel(id) {
+  let {
+    editableRowInput,
+    staticCellData,
+    editActionButtons,
+    normalActionButtons,
+  } = getEditActions(id);
+  changeBetweenInputAndPlainText(
+    staticCellData,
+    editableRowInput,
+    normalActionButtons,
+    editActionButtons
+  );
 }
 
-function editRow(n) {
-  let editableRowInput = document.getElementsByClassName(`edit-info-row-${n}`);
-  let staticCellData = document.getElementsByClassName(`info-row-${n}`);
-  console.log(typeof editableRowInput);
+function getEditActions(id) {
+  let editableRowInput = document.getElementsByClassName(`edit-info-row-${id}`);
+  let staticCellData = document.getElementsByClassName(`info-row-${id}`);
+  let editActionButtons = document.getElementById(`edit-action-${id}`);
+  let normalActionButtons = document.getElementById(`normal-action-${id}`);
+  return {
+    editableRowInput,
+    staticCellData,
+    editActionButtons,
+    normalActionButtons,
+  };
+}
+
+function editRow(id) {
+  let {
+    editableRowInput,
+    staticCellData,
+    editActionButtons,
+    normalActionButtons,
+  } = getEditActions(id);
+  changeBetweenInputAndPlainText(
+    editableRowInput,
+    staticCellData,
+    editActionButtons,
+    normalActionButtons
+  );
+}
+
+function changeBetweenInputAndPlainText(
+  editableRowInput,
+  staticCellData,
+  editActionButtons,
+  normalActionButtons
+) {
   Array.from(editableRowInput).forEach((input) => {
     input.style.display = "inline";
   });
   Array.from(staticCellData).forEach((input) => {
     input.style.display = "none";
   });
-  document.getElementById(`normal-action-${n}`).style.display = "none";
-  document.getElementById(`edit-action-${n}`).style.display = "inline";
+  editActionButtons.style.display = "inline";
+  normalActionButtons.style.display = "none";
 }
 
-function deleteRow(n) {
-  data = [...data.slice(0, n - 1), ...data.slice(n)];
+function deleteRow(id) {
+  data = [...data.slice(0, id - 1), ...data.slice(id)];
   reloadData();
 }
 
@@ -122,3 +114,11 @@ function reloadData() {
   }
   loadData();
 }
+window.functionDefinedInModuleScope = {
+  loadData,
+  deleteRow,
+  save,
+  reloadData,
+  editRow,
+  cancel,
+};
