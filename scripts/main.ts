@@ -56,9 +56,9 @@ class userDataTable<T, R> implements CRUD<T, R> {
               ? role[employeeData["role"]]
               : employeeData[colName]
           }</p><br>
-      <input type="text" class=\"edit-info-row-${
-        row.rowIndex
-      }\" name=\"${colName}\" style="display:none" value=\"${
+              <input type="text" class=\"edit-info-row-${
+                row.rowIndex
+              }\" name=\"${colName}\" style="display:none" value=\"${
             colName == "role"
               ? role[employeeData["role"]]
               : employeeData[colName]
