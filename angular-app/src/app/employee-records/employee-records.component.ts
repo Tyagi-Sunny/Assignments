@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { User } from '../models/user.model';
 
 interface EmployeeRecordInterface {
@@ -22,53 +22,17 @@ export class EmployeeRecordsComponent
 {
   editRecordIndex: number;
   editMode: boolean;
-  employees: User[] = [
-    new User(
-      'Sunny',
-      'NA',
-      'Tyagi',
-      'sunny.tyagi@sourcefuse.com',
-      '6396786017',
-      'sde',
-      'gzb'
-    ),
-    new User(
-      'Deepak',
-      'NA',
-      'Kumar',
-      'deepak.kumar@sourcefuse.com',
-      '85590 10326',
-      'Sr. Tech Lead',
-      'Mohali'
-    ),
-    new User(
-      'Samarpan',
-      'NA',
-      'Bhattacharya',
-      'samarpan.bhattacharya@sourcefuse.com',
-      '9999909854',
-      'Principal Architect',
-      'Mohali'
-    ),
-    new User(
-      'Neha',
-      'NA',
-      'Tyagi',
-      'neha@sourcefuse.com',
-      '7838467271',
-      'sde',
-      'gzb'
-    ),
-  ];
-  myUser: User = new User('', '', '', '', '', '', '');
+  @Input() employees: User[];
+  myUser: User = new User('', '', '', '', '', '', '', '');
   colName = [
     'firstName',
     'middleName',
     'lastName',
     'email',
-    'phone',
+    'contact',
     'role',
     'address',
+    'UserCustomer',
   ];
   constructor() {}
 
@@ -86,9 +50,10 @@ export class EmployeeRecordsComponent
     this.myUser.middleName = editUser.middleName;
     this.myUser.lastName = editUser.lastName;
     this.myUser.email = editUser.email;
-    this.myUser.phone = editUser.phone;
+    this.myUser.contact = editUser.contact;
     this.myUser.role = editUser.role;
     this.myUser.address = editUser.address;
+    this.myUser.UserCustomer = editUser.UserCustomer;
   }
 
   deleteRecord(index: number) {
@@ -113,12 +78,14 @@ export class EmployeeRecordsComponent
       this.myUser.lastName = (<HTMLInputElement>event.target).value;
     } else if (property === 'email') {
       this.myUser.email = (<HTMLInputElement>event.target).value;
-    } else if (property === 'phone') {
-      this.myUser.phone = (<HTMLInputElement>event.target).value;
+    } else if (property === 'contact') {
+      this.myUser.contact = (<HTMLInputElement>event.target).value;
     } else if (property === 'address') {
       this.myUser.address = (<HTMLInputElement>event.target).value;
     } else if (property === 'role') {
       this.myUser.role = (<HTMLInputElement>event.target).value;
+    } else if (property === 'UserCustomer') {
+      this.myUser.UserCustomer = (<HTMLInputElement>event.target).value;
     }
   }
   addRecord() {
