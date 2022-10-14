@@ -7,9 +7,10 @@ import { EmployeeRecordsComponent } from './employee-records/employee-records.co
 import { FormsModule } from '@angular/forms';
 
 import { HttpClientModule } from '@angular/common/http';
+import { CustomersComponent } from './customers/customers.component';
 
 @NgModule({
-  declarations: [AppComponent, EmployeeRecordsComponent],
+  declarations: [AppComponent, EmployeeRecordsComponent, CustomersComponent],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [],
   bootstrap: [AppComponent],

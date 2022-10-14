@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { User } from '../models/user.model';
+import { DataStorageService } from '../shared/data-storage.service';
 
 interface EmployeeRecordInterface {
   editRecordIndex: number;
@@ -23,7 +24,7 @@ export class EmployeeRecordsComponent
   editRecordIndex: number;
   editMode: boolean;
   @Input() employees: User[];
-  myUser: User = new User('', '', '', '', '', '', '', '');
+  myUser: User = new User(0, '', '', '', '', '', '', '', '');
   colName = [
     'firstName',
     'middleName',
@@ -34,7 +35,7 @@ export class EmployeeRecordsComponent
     'address',
     'UserCustomer',
   ];
-  constructor() {}
+  constructor(private dataService: DataStorageService) {}
 
   ngOnInit(): void {
     this.editMode = false;
@@ -43,9 +44,8 @@ export class EmployeeRecordsComponent
   editRecord(index: number) {
     this.editMode = true;
     this.editRecordIndex = index;
-    console.log(this.editRecordIndex);
     let editUser: User = this.employees[this.editRecordIndex];
-
+    this.myUser.id = editUser.id;
     this.myUser.firstName = editUser.firstName;
     this.myUser.middleName = editUser.middleName;
     this.myUser.lastName = editUser.lastName;
@@ -57,7 +57,10 @@ export class EmployeeRecordsComponent
   }
 
   deleteRecord(index: number) {
-    this.employees.splice(index, 1);
+    this.dataService.deleteUser(this.employees[index].id).subscribe((data) => {
+      this.employees.splice(index, 1);
+    });
+
     if (this.editMode && this.editRecordIndex > index) {
       this.editRecordIndex--;
     }
@@ -66,8 +69,10 @@ export class EmployeeRecordsComponent
     this.editMode = false;
   }
   save() {
-    this.editMode = false;
-    this.employees[this.editRecordIndex] = this.myUser;
+    this.dataService.saveUser(this.myUser, this.myUser.id).subscribe((data) => {
+      this.editMode = false;
+      this.employees[this.editRecordIndex] = this.myUser;
+    });
   }
   changeRecord(event: Event, property: string) {
     if (property === 'firstName') {
@@ -89,6 +94,9 @@ export class EmployeeRecordsComponent
     }
   }
   addRecord() {
-    this.employees.push(this.myUser);
+    this.myUser.id = this.employees[this.employees.length - 1].id + 1;
+    this.dataService.addUser(this.myUser).subscribe((data) => {
+      this.employees.push(this.myUser);
+    });
   }
 }

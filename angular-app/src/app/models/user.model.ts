@@ -1,4 +1,5 @@
 export class User {
+  id: number;
   firstName: string;
   middleName: string;
   lastName: string;
@@ -8,6 +9,7 @@ export class User {
   role: string;
   UserCustomer: any;
   constructor(
+    _id: number,
     _firstName: string,
     _middleName: string,
     _lastName: string,
@@ -17,6 +19,7 @@ export class User {
     _address: string,
     _UserCustomer: any
   ) {
+    this.id = _id;
     this.firstName = _firstName;
     this.middleName = _middleName;
     this.lastName = _lastName;
