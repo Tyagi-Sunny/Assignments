@@ -1,9 +1,9 @@
 const express = require("express");
-const delSubRoute = require("./delSubRoute");
-const { getEmployeeData } = require("./router-controller");
+const subRoute = require("./sub-route");
+const { getEmployeeData } = require("./user-controller");
 
 const router = express.Router({ mergeParams: true });
-router.use("/employee", delSubRoute);
+router.use("/employee", subRoute);
 
 router.route("/allEmployee").get(getEmployeeData);
 
