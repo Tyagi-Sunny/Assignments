@@ -1,7 +1,7 @@
-enum role {
-  "SuperAdmin",
-  "Admin",
-  "Subscriber",
+enum UserRole {
+  SuperAdmin,
+  Admin,
+  Subscriber,
 }
 
 interface CRUD<T, R> {
@@ -15,7 +15,7 @@ interface CRUD<T, R> {
 }
 
 function getDate(_date: Date) {
-  return function (target: Function & typeof userDataTable) {
+  return function (target: Function & typeof UserDataTable) {
     target.date =
       "Today's Date is " +
       _date.getDay() +
@@ -31,12 +31,12 @@ function getDate(_date: Date) {
 }
 
 @getDate(new Date())
-class userDataTable<T, R> implements CRUD<T, R> {
+class UserDataTable<T, R> implements CRUD<T, R> {
   static date: string;
   data: T[];
   constructor() {}
 
-  public set dataSetter(_data: T[]) {
+  set userData(_data: T[]) {
     this.data = _data;
   }
 
@@ -53,14 +53,14 @@ class userDataTable<T, R> implements CRUD<T, R> {
         if (cellNum != 7) {
           newCell.innerHTML = `<p class="info-row-${row.rowIndex}">${
             colName == "role"
-              ? role[employeeData["role"]]
+              ? UserRole[employeeData["role"]]
               : employeeData[colName]
           }</p><br>
               <input type="text" class=\"edit-info-row-${
                 row.rowIndex
               }\" name=\"${colName}\" style="display:none" value=\"${
             colName == "role"
-              ? role[employeeData["role"]]
+              ? UserRole[employeeData["role"]]
               : employeeData[colName]
           }\">`;
         } else {
@@ -145,7 +145,7 @@ class userDataTable<T, R> implements CRUD<T, R> {
     Array.from(editableRowInput).forEach((input) => {
       let value = input.value;
       input.name == "role"
-        ? (this.data[Number(rowNum) - 1][input.name] = role[value])
+        ? (this.data[Number(rowNum) - 1][input.name] = UserRole[value])
         : (this.data[Number(rowNum) - 1][input.name] = value);
     });
 
@@ -178,11 +178,11 @@ class userDataTable<T, R> implements CRUD<T, R> {
   }
 }
 
-let obj = new userDataTable<JSON, number>();
+let obj = new UserDataTable<JSON, number>();
 fetch("../data.json")
   .then((res) => res.json())
   .then((data) => {
-    obj.dataSetter = data;
+    obj.userData = data;
   });
 
-console.log(userDataTable.date);
+console.log(UserDataTable.date);
