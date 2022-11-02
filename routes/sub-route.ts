@@ -1,5 +1,5 @@
 const express = require("express");
-const { delEmployee, updateEmployee } = require("./router-controller");
+const { delEmployee, updateEmployee } = require("./user-controller");
 
 const subroute = express.Router({ mergeParams: true });
 
