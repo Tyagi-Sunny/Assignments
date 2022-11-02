@@ -1,4 +1,15 @@
-[{"id":1,"firstName":"Sunny","middleName":"NA","lastName":"Tyagi","email":"sunny.tyagi@sourcefuse.com","contact":6396786017,"role":"Web-Apps Engineer","address":"GZB"},{
+[
+  {
+    "id": 1,
+    "firstName": "Sunny",
+    "middleName": "NA",
+    "lastName": "Tyagi",
+    "email": "sunny.tyagi@sourcefuse.com",
+    "contact": 6396786017,
+    "role": "Web-Apps Engineer",
+    "address": "GZB"
+  },
+  {
     "id": 2,
     "firstName": "Deepak",
     "middleName": "NA",
@@ -7,4 +18,25 @@
     "contact": 8559010326,
     "role": "Snr. Tech lead",
     "address": "Mohali"
-},{"id":3,"firstName":"Samarpan","middleName":"NA","lastName":"Bhattacharya","email":"samarpan.bhattacharya@sourcefuse.com","contact":"9999909854","role":"Principal Architect","address":"Mohali"},{"id":4,"firstName":"Harshit","middleName":"NA","lastName":"kumar","email":"harshit.kumar@sourcefuse.com","contact":"6378774051","role":"DevOps Engineer","address":"Mohali"}]
+  },
+  {
+    "id": 3,
+    "firstName": "Samarpan",
+    "middleName": "NA",
+    "lastName": "Bhattacharya",
+    "email": "samarpan.bhattacharya@sourcefuse.com",
+    "contact": "9999909854",
+    "role": "Principal Architect",
+    "address": "Mohali"
+  },
+  {
+    "id": 4,
+    "firstName": "Harshit",
+    "middleName": "NA",
+    "lastName": "kumar",
+    "email": "harshit.kumar@sourcefuse.com",
+    "contact": "6378774051",
+    "role": "DevOps Engineer",
+    "address": "Mohali"
+  }
+]
