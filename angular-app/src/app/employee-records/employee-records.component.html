@@ -1,0 +1,95 @@
+<div class="row">
+  <div class="col-sm">
+    <span>{{ err }}</span>
+  </div>
+</div>
+<div id="tableContainer row">
+  <div id="table col-xs-10">
+    <table id="dataTable" style="margin: 0 auto">
+      <thead>
+        <tr>
+          <th>Firstname</th>
+          <th>Middlename</th>
+          <th>lastname</th>
+          <th>email</th>
+          <th>phone</th>
+          <th>role</th>
+          <th>address</th>
+          <th>customer</th>
+          <th *ngIf="currentUserRole !== 'Subscriber'">action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="currentUserRole !== 'Subscriber'">
+          <td *ngFor="let property of colName">
+            <input
+              type="text"
+              style="width: 100%"
+              [name]="property"
+              (input)="changeRecord($event, property)"
+            />
+          </td>
+          <td>
+            <button class="btn btn-success" (click)="addRecord()">Add</button>
+          </td>
+        </tr>
+        <tr *ngFor="let employee of employees; let i = index">
+          <td *ngFor="let property of colName">
+            <div
+              *ngIf="
+                !editMode || (editMode && editRecordIndex !== i);
+                else inputeField
+              "
+            >
+              {{ employee.getProperty(property) }}
+            </div>
+            <ng-template #inputeField>
+              <input
+                type="text"
+                style="width: 100%"
+                [name]="property"
+                [value]="employee.getProperty(property)"
+                (input)="changeRecord($event, property)"
+              />
+            </ng-template>
+          </td>
+
+          <td *ngIf="currentUserRole !== 'Subscriber'">
+            <div *ngIf="!editMode || (editMode && editRecordIndex !== i)">
+              <button
+                class="btn btn-primary"
+                style="margin: 2px"
+                (click)="editRecord(i)"
+              >
+                edit
+              </button>
+              <button
+                class="btn btn-danger"
+                style="margin: 2px"
+                (click)="deleteRecord(i)"
+              >
+                del
+              </button>
+            </div>
+            <div *ngIf="editMode && editRecordIndex === i">
+              <button
+                class="btn btn-primary"
+                style="margin: 2px"
+                (click)="save()"
+              >
+                save
+              </button>
+              <button
+                class="btn btn-danger"
+                style="margin: 2px"
+                (click)="cancel()"
+              >
+                cancel
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
