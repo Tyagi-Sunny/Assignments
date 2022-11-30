@@ -11,6 +11,7 @@ import { io, SocketOptions, ManagerOptions } from 'socket.io-client';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../auth/token.service';
 import { AuthService } from '../auth/auth.service';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-chat',
@@ -34,6 +35,7 @@ import { AuthService } from '../auth/auth.service';
 })
 export class ChatComponent implements OnInit {
   public token: string;
+  public user: any;
   constructor(
     private readonly userHttpService: UserService,
     private readonly ngxNotificationService: NgxNotificationService,
@@ -92,20 +94,25 @@ export class ChatComponent implements OnInit {
   }
 
   getMessages() {
+    if (!this.user) {
+      this.user = jwt_decode(this.token);
+    }
     this.inRoom = true;
     this.token = window.sessionStorage.getItem('accessToken') || '';
     this.userHttpService.get(this.token, this.channelUUID).subscribe((data) => {
       this.messages = [];
       for (const d of data) {
+        console.log(d);
+
         const temp: ChatMessage = {
           body: d.body,
           subject: d.subject,
           channelType: '0',
           reply: false,
-          sender: 'sender',
+          sender: d.subject,
         };
         if (d.createdBy === this.senderUUID) {
-          temp.sender = 'User';
+          temp.sender = this.user.firstName;
           temp.reply = true;
         }
         this.messages.push(temp);
@@ -128,12 +135,12 @@ export class ChatComponent implements OnInit {
         subject: message.subject,
         channelType: '0',
         reply: false,
-        sender: 'sender',
+        sender: message.subject,
       };
-      if (message.subject != this.senderUUID) {
+      if (message.subject != this.user.firstName) {
         this.messages.push(temp);
         this.ngxNotificationService.sendMessage(
-          `New message from sender: ${message.body}`,
+          `New message from ${message.subject}: ${message.body}`,
           'info',
           'top-left'
         );
@@ -161,7 +168,7 @@ export class ChatComponent implements OnInit {
 
     const dbMessage: Chat = {
       body: event.message,
-      subject: this.senderUUID,
+      subject: userName,
       toUserId: this.channelUUID,
       channelId: this.channelUUID,
       channelType: '0',
@@ -172,6 +179,5 @@ export class ChatComponent implements OnInit {
       // sonarignore:end
       this.messages.push(chatMessage);
     });
-    this.getMessages();
   }
 }

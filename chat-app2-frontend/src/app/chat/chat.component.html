@@ -3,7 +3,10 @@
     <lib-ngx-notification></lib-ngx-notification>
     <nb-layout>
       <nb-layout-column>
-        <nb-chat title="User" size="medium">
+        <nb-chat
+          [title]="user ? 'User - ' + user.firstName : 'join the chat room'"
+          size="medium"
+        >
           <nb-chat-message
             *ngFor="let msg of messages"
             [message]="msg.body"
@@ -15,7 +18,7 @@
             (send)="
               sendMessage(
                 $event,
-                'User',
+                user.firstName,
                 'http://www.reactiongifs.com/r/wnd1.gif'
               )
             "
