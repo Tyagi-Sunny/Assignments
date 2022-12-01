@@ -6,6 +6,7 @@ import {
   FindRoute,
   HttpErrors,
   InvokeMethod,
+  InvokeMiddleware,
   ParseParams,
   Reject,
   RequestContext,
@@ -25,6 +26,8 @@ import {RoleRepository} from './repositories';
 // export class MySequence extends MiddlewareSequence {}
 
 export class MySequence implements SequenceHandler {
+  @inject(SequenceActions.INVOKE_MIDDLEWARE, {optional: true})
+  protected invokeMiddleware: InvokeMiddleware = () => false;
   constructor(
     @inject(SequenceActions.FIND_ROUTE) protected findRoute: FindRoute,
     @inject(SequenceActions.PARSE_PARAMS) protected parseParams: ParseParams,
@@ -41,13 +44,17 @@ export class MySequence implements SequenceHandler {
   async handle(context: RequestContext) {
     try {
       const {request, response} = context;
-
+      const finished = await this.invokeMiddleware(context);
+      if (finished) {
+        // The response been produced by the middleware chain
+        return;
+      }
       const route = this.findRoute(request);
       const args = await this.parseParams(request, route);
       request.body = args[args.length - 1];
       const authUser: User = await this.authenticateRequest(request);
       if (!authUser) {
-        console.log('please login');
+        console.log('please login', authUser);
       } else {
         const role = await this.roleRepository.findById(authUser.rid);
         const isAccessAllowed: boolean = await this.checkAuthorisation(

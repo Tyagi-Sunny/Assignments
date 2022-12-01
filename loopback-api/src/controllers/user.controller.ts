@@ -17,6 +17,7 @@ import {
   put,
   requestBody,
   response,
+  SchemaObject,
 } from '@loopback/rest';
 import {securityId, UserProfile} from '@loopback/security';
 import {
@@ -28,6 +29,27 @@ import {authorize} from 'loopback4-authorization';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
 import {jwtService} from '../services/jwt.service';
+
+const CredentialsSchema: SchemaObject = {
+  type: 'object',
+  required: ['username', 'password'],
+  properties: {
+    username: {
+      type: 'string',
+    },
+    password: {
+      type: 'string',
+    },
+  },
+};
+
+export const LoginRequestBody = {
+  description: 'Login Endpoint inputs',
+  required: true,
+  content: {
+    'application/json': {schema: CredentialsSchema},
+  },
+};
 
 export class UserController {
   constructor(
@@ -49,13 +71,13 @@ export class UserController {
     },
   })
   async login(
-    @requestBody()
+    @requestBody(LoginRequestBody)
     credentials: {
       username: 'string';
       password: 'string';
     },
     @inject(AuthenticationBindings.CURRENT_USER) currentUser: User,
-  ): Promise<{token: string}> {
+  ): Promise<{token: string; rid: number}> {
     let user: UserProfile = {
       [securityId]: currentUser.id!.toString(),
       id: currentUser.id,
@@ -64,7 +86,8 @@ export class UserController {
     };
 
     let token = await this.jwtService.generateToken(user);
-    return {token};
+    let rid = currentUser.rid;
+    return {token, rid};
   }
 
   @authorize({permissions: ['*']})
@@ -89,7 +112,7 @@ export class UserController {
   }
 
   @authenticate(STRATEGY.BEARER)
-  @authorize({permissions: ['CreateUsers']})
+  @authorize({permissions: ['CreateUser']})
   @post('/users')
   @response(200, {
     description: 'User model instance',
