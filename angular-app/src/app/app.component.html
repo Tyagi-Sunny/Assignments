@@ -1,0 +1,43 @@
+<div class="container" *ngIf="!isLoggedIn">
+  <app-auth></app-auth>
+</div>
+<div class="container" *ngIf="isLoggedIn">
+  <div class="row" style="text-align: center; margin: 10px">
+    <div class="col-sm-10">
+      <button class="btn btn-primary" (click)="loadEmployee()">
+        {{ dataLoaded ? "Reload Data" : "Load Data" }}
+      </button>
+    </div>
+    <div class="col-sm">
+      <button class="btn btn-danger" (click)="logOut()">Logout</button>
+    </div>
+  </div>
+  <div class="row" *ngIf="dataLoaded">
+    <div class="col-xs-12" style="text-align: center; margin: 10px">
+      <app-employee-records
+        [currentUserRole]="currentUserRole"
+        [employees]="users"
+      ></app-employee-records>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-sm-12">
+      <button class="btn btn-primary" (click)="loadCustomer()">
+        Load Customer
+      </button>
+    </div>
+  </div>
+  <div class="row" *ngIf="customersLoaded">
+    <div class="col-sm" style="margin: 10px">
+      <app-customers [customers]="customers"></app-customers>
+    </div>
+    <div class="col-sm">
+      <app-employee-records
+        *ngIf="usersOfCustomer"
+        [currentUserRole]="currentUserRole"
+        [employees]="usersOfCustomer"
+      ></app-employee-records>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+#tableContainer {
+  margin: 10px;
+}
+
+table {
+  border: 2px black solid;
+  width: 100%;
+}
+
+.editRecord {
+  width: 100%;
+}
+
+th,
+td {
+  border: 2px grey solid;
+}
